@@ -1,12 +1,28 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
+import connection from "../../../../../database";
 
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
-    console.log({ email, password });
-  } catch (e) {
-    console.log({ e });
-  }
 
-  return NextResponse.json({ message: "success" });
+    // Hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Insert the new user into the database
+    const [result] = await connection.query(
+      "INSERT INTO users (email, passwordHash, passwordRaw) VALUES (?, ?, ?)",
+      [email, hashedPassword, password]
+    );
+
+    console.log("User created:", result);
+    return NextResponse.json({ message: "User created successfully" });
+  } catch (e) {
+    console.error("Error inserting user:", e);
+    return NextResponse.json(
+      { message: "Error creating user" },
+      { status: 500 }
+    );
+  }
 }

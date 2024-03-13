@@ -1,35 +1,41 @@
+import Adapter from "@/adapters/users";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+import connection from "../../../../../database";
 
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
+      async authorize(credentials) {
+        if (credentials) {
+          const { email, password } = credentials;
 
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
+          try {
+            const [[user]] = await connection.query(
+              "SELECT * FROM users WHERE email = ?",
+              [email]
+            );
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+            // If no user is found or the password doesn't match, return null
+            if (user && (await bcrypt.compare(password, user.passwordHash))) {
+              return { id: user.id, name: user.email, email: user.email }; // the user object should be what you want to be saved in the session
+            }
+          } catch (error) {
+            console.error("Error in authorize function:", error);
+          }
         }
+        return null; // If credentials are not provided
       },
     }),
   ],
+  adapter: Adapter,
 });
 
 export { handler as GET, handler as POST };
