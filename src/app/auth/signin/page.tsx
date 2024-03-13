@@ -3,95 +3,56 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Form from "./form";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
   const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    // Reset error state
-    setError("");
-
-    // Attempt to sign in
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: email,
-      password: password,
-    });
-
-    if (result?.error) {
-      // Handle errors, such as displaying a message to the user
-      setError("Invalid email or password. Please try again.");
-    } else {
-      // Handle success, such as redirecting to a private page
-      router.push("/dashboard");
-    }
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-      >
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Enter your email"
-            onChange={handleEmailChange}
-            value={email}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
+    <div className="flex just items-center h-screen bg-login-background w-full bg-cover">
+      <div className="flex justify-center items-center max-h-[600px] m-auto w-full h-full max-w-[1170px]">
+        <div className="w-full bg-white flex flex-col justify-around h-full">
+          <div className="flex px-6">
+            <Image
+              src={"/images/mobilecomm-logo.png"}
+              alt="mrfsafe-logo"
+              width={100}
+              height={100}
+              className="min-w-[100px]"
+            />
+          </div>
+          <div className="flex justify-center items-center">
+            <Image
+              src={"/images/mRFSafe-logo.svg"}
+              alt="mrfsafe-logo"
+              width={100}
+              height={100}
+              className="min-w-[300px]"
+            />
+          </div>
+          <div className="flex gap-6 text-[12px] justify-center">
+            <Link href="https://www.mcpsinc.com/privacy-policy" target="_blank">
+              Privacy Policy
+            </Link>
+            <p>Copyright © MobileComm Professionals Inc 2023</p>
+          </div>
         </div>
-        <div className="mb-6">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Enter your password"
-            onChange={handlePasswordChange}
-            value={password}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
+        <div className="bg-[#2393b9] w-full h-full p-6">
+          <div className="flex flex-col justify-center items-center h-full">
+            <div className="text-container mb-10">
+              <h1 className="text-white text-2xl font-bold">
+                Welcome to mRFSafe
+              </h1>
+              <p className="text-[#b6b7b7]">
+                Sign in by entering information below
+              </p>
+              <Form />
+            </div>
+          </div>
         </div>
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Sign In
-          </button>
-        </div>
-        {error && <p className="text-red-500 text-xs italic">{error}</p>}
-      </form>
+      </div>
     </div>
   );
 }

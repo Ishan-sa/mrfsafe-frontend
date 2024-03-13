@@ -1,13 +1,13 @@
-import Adapter from "@/adapters/users";
+// /api/auth/[nextauth]/route.ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import connection from "../../../../../database";
+import connection from "../../../../../database"; // Ensure this path is correct
+import Adapter from "@/adapters/users";
 
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
@@ -19,22 +19,29 @@ const handler = NextAuth({
 
           try {
             const [[user]] = await connection.query(
-              "SELECT * FROM users WHERE email = ?",
+              "SELECT * FROM tbl_users WHERE email = ?",
               [email]
             );
 
-            // If no user is found or the password doesn't match, return null
-            if (user && (await bcrypt.compare(password, user.passwordHash))) {
-              return { id: user.id, name: user.email, email: user.email }; // the user object should be what you want to be saved in the session
+            // Check if user is found and either the hashed password matches
+            // or the raw password matches (development only)
+            if (
+              (user && (await bcrypt.compare(password, user.password))) ||
+              password === user.raw_password
+            ) {
+              // Return the user object excluding raw_password for security reasons
+              const { raw_password, ...userWithoutRawPassword } = user;
+              return userWithoutRawPassword;
             }
           } catch (error) {
             console.error("Error in authorize function:", error);
           }
         }
-        return null; // If credentials are not provided
+        return null; // If credentials are not provided or they don't match
       },
     }),
   ],
+  // Remove or adjust the adapter if you're not using it or if it needs to be updated for the new DB schema
   adapter: Adapter,
 });
 
