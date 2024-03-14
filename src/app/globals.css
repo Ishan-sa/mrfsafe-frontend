@@ -31,3 +31,23 @@ body {
     text-wrap: balance;
   }
 }
+
+.background:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+
+  /* adjust overlay colour/transparency here */
+  background: rgba(0, 0, 0, 0.66);
+
+  /* can blur the background too */
+  /* backdrop-filter: blur(5px); */
+}
+
+.background-blur {
+  backdrop-filter: blur(5px);
+}

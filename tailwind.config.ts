@@ -13,6 +13,7 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "login-background": "url('/images/bg-login.jpg')",
+        "login-background-2": "url('/images/bg-login2.png')",
       },
     },
   },

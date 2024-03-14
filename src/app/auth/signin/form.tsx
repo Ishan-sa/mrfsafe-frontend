@@ -54,11 +54,11 @@ export default function Form() {
             placeholder="Enter your email"
             onChange={handleEmailChange}
             value={email}
-            className="p-2"
+            className="px-[0.5rem] py-[0.6rem] text-sm"
             required
           />
         </div>
-        <div className="flex flex-col mb-6">
+        <div className="flex flex-col">
           <label
             className="block text-white text-sm font-bold mb-2"
             htmlFor="password"
@@ -72,12 +72,13 @@ export default function Form() {
             placeholder="Enter your password"
             onChange={handlePasswordChange}
             value={password}
-            className="p-2"
+            className="px-[0.5rem] py-[0.6rem] text-sm"
             required
           />
         </div>
+        {error && <p className="text-red-200 text-md italic">{error}</p>}
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-4">
         <button
           type="submit"
           className="bg-[#999999] px-4 py-2 text-white font-bold rounded-lg"
@@ -85,8 +86,6 @@ export default function Form() {
           Sign In
         </button>
       </div>
-
-      {error && <p className="text-red-500 text-xs italic">{error}</p>}
     </form>
   );
 }
