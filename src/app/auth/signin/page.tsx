@@ -2,6 +2,7 @@
 import Form from "./form";
 import Image from "next/image";
 import Link from "next/link";
+import { IMAGE_PATHS } from "@/utils/constants";
 
 export default function LoginForm() {
   return (
@@ -15,7 +16,7 @@ export default function LoginForm() {
         <div className="w-full md:w-1/2 h-full flex flex-col justify-between bg-white">
           <div className="flex justify-center md:justify-start px-6">
             <Image
-              src="/images/logos/mobilecomm-logo.png"
+              src={IMAGE_PATHS.mobileCommLogo}
               alt="MobileComm Logo"
               width={120}
               height={120}
@@ -24,7 +25,7 @@ export default function LoginForm() {
           </div>
           <div className="flex justify-center">
             <Image
-              src="/images/logos/mRFSafe-logo.svg"
+              src={IMAGE_PATHS.mRFSafeLogo}
               alt="mRFSafe Logo"
               width={300}
               height={300}
