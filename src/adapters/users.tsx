@@ -13,7 +13,7 @@ const Users = {
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     const [result] = await connection.query(
-      "INSERT INTO users (email, passwordHash, passwordRaw) VALUES (?, ?, ?)",
+      "INSERT INTO tbl_users (email, password, raw_password) VALUES (?, ?, ?)",
       [email, passwordHash, password]
     );
     return result;

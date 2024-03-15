@@ -1,97 +1,65 @@
 "use client";
-
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import Form from "./form";
+import Image from "next/image";
+import Link from "next/link";
+import { IMAGE_PATHS } from "@/utils/constants";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const router = useRouter();
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    // Reset error state
-    setError("");
-
-    // Attempt to sign in
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: email,
-      password: password,
-    });
-
-    if (result?.error) {
-      // Handle errors, such as displaying a message to the user
-      setError("Invalid email or password. Please try again.");
-    } else {
-      // Handle success, such as redirecting to a private page
-      router.push("/dashboard");
-    }
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-      >
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Enter your email"
-            onChange={handleEmailChange}
-            value={email}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
+    <div className="flex items-center justify-center h-screen w-full bg-login-background bg-cover bg-no-repeat relative">
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      <div className="absolute inset-0 backdrop-blur-md"></div>
+
+      <div className="flex justify-center items-center h-full w-full max-w-[1170px] relative z-10 flex-col py-16 px-8 md:flex-row">
+        {/* Left Side */}
+        <div className="w-full md:w-1/2 h-full flex flex-col justify-between bg-white">
+          <div className="flex justify-center md:justify-start px-6">
+            <Image
+              src={IMAGE_PATHS.mobileCommLogo}
+              alt="MobileComm Logo"
+              width={120}
+              height={120}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex justify-center">
+            <Image
+              src={IMAGE_PATHS.mRFSafeLogo}
+              alt="mRFSafe Logo"
+              width={300}
+              height={300}
+              className="object-contain"
+            />
+          </div>
+          <div className="bg-login-background-2 w-full h-full flex justify-center items-center bg-cover bg-no-repeat">
+            <div className="flex justify-center items-center text-sm text-center gap-6 px-6 mb-4 md:mb-0">
+              <Link
+                href="https://www.mcpsinc.com/privacy-policy"
+                target="_blank"
+              >
+                Privacy Policy
+              </Link>
+              <p className="text-black text-sm">
+                Copyright © MobileComm Professionals Inc 2023
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="mb-6">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Enter your password"
-            onChange={handlePasswordChange}
-            value={password}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
+
+        {/* Right Side */}
+        <div className="w-full md:w-1/2 h-full bg-[#2393b9] p-6 flex flex-col justify-center items-center">
+          <div className="mb-10">
+            <h1 className="text-white text-2xl font-bold">
+              Welcome to mRFSafe
+            </h1>
+            <p className="text-[#b6b7b7]">
+              Sign in by entering information below
+            </p>
+            <Form />
+          </div>
         </div>
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Sign In
-          </button>
-        </div>
-        {error && <p className="text-red-500 text-xs italic">{error}</p>}
-      </form>
+      </div>
     </div>
   );
 }
